@@ -1,14 +1,14 @@
 ---
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 ---
 
 # Market Trends
 
-## Last Updated: 2026-06-08
+## Last Updated: 2026-06-09
 
 ## Sector Trends
 
-AI companies are going horizontal simultaneously. OpenAI is expanding into consumer finance, enterprise professional services, and no-code builders in one sprint. LangChain is becoming the production infrastructure layer for agents — now unicorn-funded with enterprise backing. Notion is pivoting from knowledge tool to AI orchestration hub with 1M+ custom agents already built. The competitive pressure is compressing from the model layer (OpenAI), the infrastructure layer (LangChain), and the workspace layer (Notion) at the same time.
+GPT-5 landed this week — the model baseline shifted overnight. OpenAI filed confidentially for IPO (September 2026 target), alongside Anthropic — two simultaneous AI IPOs will dominate enterprise procurement conversations through Q3. LangChain shipped 1.1 and is hardening production reliability. Notion expanded MCP access to all members and added enterprise governance for Custom Agents. The window for differentiation on raw capability is closing; execution, trust, and reliability are becoming the real moat.
 
 ## Pricing Trends
 

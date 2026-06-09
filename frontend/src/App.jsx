@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 // ── VAULT DATA (sourced from vault/ files) ──────────────────────────────────
@@ -155,8 +155,8 @@ const MORNING_BRIEF_DATA = {
 };
 
 const MARKET_PULSE_DATA = {
-  lastRun: "2026-06-08",
-  actionCount: 8,
+  lastRun: "2026-06-09",
+  actionCount: 7,
   fiyCount: 6,
   watchlist: [
     { company: "OpenAI", website: "openai.com", notes: "primary competitor" },
@@ -167,74 +167,74 @@ const MARKET_PULSE_DATA = {
     {
       tag: "action",
       company: "OpenAI",
-      title: "ChatGPT Personal Finance — bank accounts connected",
-      body: "Acquired Hiro team, launched finance tools on ChatGPT (web + iOS Pro). New consumer category.",
+      title: "GPT-5 launched — baseline shift overnight",
+      body: "New state-of-the-art across coding, reasoning, multimodal. Replaces GPT-4o as default for free users. Reassess capability benchmarks.",
     },
     {
       tag: "action",
       company: "OpenAI",
-      title: "Professional Services Business + $4B",
-      body: "Enterprise sales motion getting aggressive. Acquisitions planned. Watch their pricing.",
+      title: "IPO filed confidentially — Sept 2026 target, $730B–$850B",
+      body: "Alongside Anthropic IPO. Two simultaneous AI IPOs will dominate enterprise procurement decisions through Q3. Lock in annual contracts now.",
     },
     {
       tag: "action",
       company: "OpenAI",
-      title: "Codex Sites — hosted interactive websites",
-      body: "Partners: Wix, Replit, Figma, Lovable. Direct push into no-code/builder market.",
+      title: "Codex Enterprise — 6 plugins, advanced code automation",
+      body: "GitHub, Jira, Slack, Linear, Confluence, and Figma integrations. Codex is becoming a full dev workflow tool.",
+    },
+    {
+      tag: "action",
+      company: "OpenAI",
+      title: "Leadership exodus — 5+ senior execs departing",
+      body: "COO Brad Lightcap → special projects. Denise Dresser named new COO. CMO Kate Rouch out. Greg Brockman on leave. Instability pre-IPO — track roadmap continuity.",
     },
     {
       tag: "action",
       company: "LangChain",
-      title: "$125M Series B at $1.25B valuation — unicorn",
-      body: "Backed by ServiceNow, Workday, Cisco, Datadog, Databricks. Evaluate dependency risk.",
-    },
-    {
-      tag: "action",
-      company: "LangChain",
-      title: "Agent Builder in private preview",
-      body: "No-code text-to-agent. Lowers barrier for non-technical users. Get on the waitlist.",
-    },
-    {
-      tag: "action",
-      company: "LangChain",
-      title: "LangChain 1.0 + LangGraph GA",
-      body: "First stable release. Pre-built agent architectures. Production-ready now.",
+      title: "LangChain 1.1 released — production hardening",
+      body: "Improved streaming, observability, and retry logic. LangSmith Engine now GA. If you use LangChain in prod, upgrade path is stable.",
     },
     {
       tag: "action",
       company: "Notion",
-      title: "Developer Platform + Workers launched",
-      body: "Custom code in sandbox, external agents (Claude Code, Cursor, Codex). Notion = orchestration hub.",
+      title: "Notion MCP expanded to all members — 91% token reduction",
+      body: "Any member can now build MCP connections. Enterprise governance controls added for Custom Agents. Notion is becoming AI infrastructure for teams.",
     },
     {
       tag: "action",
       company: "Notion",
-      title: "1M+ Custom Agents created since Feb 2026",
-      body: "Massive adoption. If your team uses Notion, they may already be automating.",
+      title: "Custom Agent governance controls for enterprise",
+      body: "Admins can audit, pause, and revoke agents. Notion positioning for compliance-sensitive enterprise buyers.",
     },
     {
       tag: "fyi",
       company: "OpenAI",
-      title: "GPT-5.4 launched",
-      body: "Most capable model yet. Replaces GPT-5.3 as default.",
+      title: "Denise Dresser named COO",
+      body: "Former Slack CEO. Strong enterprise GTM background. Signals IPO readiness + enterprise push.",
     },
     {
       tag: "fyi",
       company: "OpenAI",
-      title: "Venture Fund launched",
-      body: "OpenAI investing directly in startups — wants to own the application layer.",
+      title: "GPT-5 free for all — monetisation shift",
+      body: "Most capable model now free tier. Revenue lever moves to Pro ($200/mo) and API volume.",
     },
     {
       tag: "fyi",
       company: "LangChain",
-      title: "CEO: better models alone won't get agents to production",
-      body: "Deliberate market framing — positioning LangChain as the reliability layer.",
+      title: "LangSmith Engine GA — deep agents focus",
+      body: "Tracing, evaluation, and annotation suite now stable. Company doubling down on agent observability.",
     },
     {
       tag: "fyi",
       company: "Notion",
-      title: "$270M PE tender offer at $11B valuation",
-      body: "Liquidity event for existing shareholders. Not new growth capital. Company still private.",
+      title: "notion.com domain acquired",
+      body: "Moved from notion.so → notion.com. Enterprise credibility play. Update any hardcoded links.",
+    },
+    {
+      tag: "fyi",
+      company: "Notion",
+      title: "AI Meetings feature launched",
+      body: "Auto-summarises meetings and extracts action items into Notion pages. Competes with Otter.ai, Fireflies.",
     },
   ],
 };
@@ -477,7 +477,34 @@ function SprintTrackerPage({ onBack }) {
   );
 }
 
+const TAG_CONFIG = {
+  urgent:   { cls: "in-progress", label: "🔴 Urgent" },
+  calendar: { cls: "done",        label: "📅 Calendar" },
+  context:  { cls: "todo",        label: "💡 Context" },
+  fyi:      { cls: "todo",        label: "📋 FYI" },
+};
+
 function MorningBriefPage({ onBack }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/morning-brief/latest")
+      .then(r => r.json())
+      .then(d => { setData(d); setLoading(false); })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, []);
+
+  // Format date nicely: "2026-06-03" → "Wednesday, June 3 2026"
+  const fmtDate = (iso) => {
+    if (!iso) return "—";
+    const d = new Date(iso + "T12:00:00");
+    return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  };
+
+  const brief = data || MORNING_BRIEF_DATA;
+
   return (
     <>
       <div className="back-btn" onClick={onBack}>← Back</div>
@@ -486,51 +513,73 @@ function MorningBriefPage({ onBack }) {
           <div className="auto-icon green" style={{ width: 44, height: 44, fontSize: 22 }}>📰</div>
           <div>
             <div className="page-title">Morning Brief</div>
-            <div className="page-sub">Last run: {MORNING_BRIEF_DATA.lastRun} · {MORNING_BRIEF_DATA.urgentCount} urgent · {MORNING_BRIEF_DATA.fiyCount} FYI</div>
+            <div className="page-sub">
+              {loading ? "Loading…" : `Last run: ${brief.lastRun} · ${brief.urgentCount} urgent · ${brief.fiyCount} FYI`}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="stats-row" style={{ marginBottom: 24 }}>
-        <div className="stat-card">
-          <div className="stat-value red">{MORNING_BRIEF_DATA.urgentCount}</div>
-          <div className="stat-label">Urgent</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value blue">{MORNING_BRIEF_DATA.fiyCount}</div>
-          <div className="stat-label">FYI</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{MORNING_BRIEF_DATA.meetings}</div>
-          <div className="stat-label">Meetings Today</div>
-        </div>
-      </div>
+      {loading && (
+        <div style={{ color: "var(--text-muted)", padding: "32px 0", textAlign: "center" }}>Fetching latest brief…</div>
+      )}
 
-      <div className="detail-grid">
-        <div className="detail-card full-width">
-          <div className="detail-card-title">Today's Brief — {MORNING_BRIEF_DATA.lastRun}</div>
-          {MORNING_BRIEF_DATA.items.map((item, i) => (
-            <div key={i} className="brief-item">
-              <div className="brief-item-top">
-                <span className={`badge ${item.tag === "urgent" ? "in-progress" : "todo"}`}>
-                  {item.tag === "urgent" ? "🔴 Urgent" : "📋 FYI"}
-                </span>
-                <div className="brief-item-title">{item.title}</div>
-              </div>
-              <div className="brief-item-body">{item.body}</div>
+      {error && (
+        <div style={{ color: "#f87171", padding: "12px 16px", background: "rgba(248,113,113,0.08)", borderRadius: 8, marginBottom: 20 }}>
+          Could not load live data: {error}. Showing cached data.
+        </div>
+      )}
+
+      {!loading && (
+        <>
+          <div className="stats-row" style={{ marginBottom: 24 }}>
+            <div className="stat-card">
+              <div className="stat-value red">{brief.urgentCount}</div>
+              <div className="stat-label">Urgent</div>
             </div>
-          ))}
-        </div>
-      </div>
+            <div className="stat-card">
+              <div className="stat-value blue">{brief.fiyCount}</div>
+              <div className="stat-label">FYI</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{brief.meetings}</div>
+              <div className="stat-label">Meetings Today</div>
+            </div>
+          </div>
 
-      <div className="detail-card">
-        <div className="detail-card-title">Schedule & Config</div>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <span className="schedule-tag">🕐 Daily 8:00 AM</span>
-          <code style={{ fontSize: 12, color: "var(--text-muted)", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 6 }}>/morning-brief</code>
-          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Daily Briefs DB: d721dc09</span>
-        </div>
-      </div>
+          <div className="detail-grid">
+            <div className="detail-card full-width">
+              <div className="detail-card-title">
+                {fmtDate(brief.lastRun)}
+                <span style={{ fontSize: 12, color: "var(--text-muted)", marginLeft: 10, fontWeight: 400 }}>
+                  {brief.lastRun}
+                </span>
+              </div>
+              {brief.items.map((item, i) => {
+                const cfg = TAG_CONFIG[item.tag] || TAG_CONFIG.fyi;
+                return (
+                  <div key={i} className="brief-item">
+                    <div className="brief-item-top">
+                      <span className={`badge ${cfg.cls}`}>{cfg.label}</span>
+                      <div className="brief-item-title">{item.title}</div>
+                    </div>
+                    {item.body && <div className="brief-item-body">{item.body}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="detail-card">
+            <div className="detail-card-title">Schedule & Config</div>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <span className="schedule-tag">🕐 Daily 8:00 AM</span>
+              <code style={{ fontSize: 12, color: "var(--text-muted)", background: "rgba(255,255,255,0.04)", padding: "4px 10px", borderRadius: 6 }}>/morning-brief</code>
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Daily Briefs DB: d721dc09</span>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
@@ -641,6 +690,16 @@ function MarketPulsePage({ onBack }) {
 
 export default function App() {
   const [page, setPage] = useState("dashboard");
+  const [liveBrief, setLiveBrief] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/morning-brief/latest")
+      .then(r => r.json())
+      .then(d => setLiveBrief(d))
+      .catch(() => {});
+  }, []);
+
+  const briefUrgent = liveBrief ? liveBrief.urgentCount : MORNING_BRIEF_DATA.urgentCount;
 
   const nav = (id) => setPage(id);
 
@@ -677,7 +736,7 @@ export default function App() {
         <div className="nav-section" style={{ marginTop: 8 }}>
           <div className="nav-label">Active</div>
           <NavItem icon="📌" label="Sprint Tracker" id="sprint-tracker" active={page === "sprint-tracker"} onClick={nav} />
-          <NavItem icon="📰" label="Morning Brief" id="morning-brief" active={page === "morning-brief"} badge={MORNING_BRIEF_DATA.urgentCount} badgeColor="red" onClick={nav} />
+          <NavItem icon="📰" label="Morning Brief" id="morning-brief" active={page === "morning-brief"} badge={briefUrgent} badgeColor="red" onClick={nav} />
           <NavItem icon="📈" label="Market Pulse" id="market-pulse" active={page === "market-pulse"} badge={MARKET_PULSE_DATA.actionCount} badgeColor="yellow" onClick={nav} />
         </div>
 

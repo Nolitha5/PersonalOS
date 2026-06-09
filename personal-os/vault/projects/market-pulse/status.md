@@ -3,8 +3,8 @@ db_id: 96ed9303-697b-46b8-bb30-c96c7930791b
 data_source_id: 4382fd36-e80c-49d6-ac42-99c7008ae61d
 parent_page_id: 374b66bd-f9e9-811d-8d2e-c6fd367702eb
 created: 2026-06-03
-last_run: 2026-06-08
-last_action_count: 8
+last_run: 2026-06-09
+last_action_count: 7
 last_fyi_count: 6
 last_companies: OpenAI, LangChain, Notion
 notion_status: active
@@ -26,10 +26,10 @@ sprint_marked_done: true
 
 ## Last Run
 
-- Date: 2026-06-08
+- Date: 2026-06-09
 - Companies: OpenAI, LangChain, Notion
-- Action: 8 | FYI: 6
-- Scan: [[projects/market-pulse/news-archive/2026-06-08]]
+- Action: 7 | FYI: 6
+- Scan: [[projects/market-pulse/news-archive/2026-06-09]]
 - Note: Chrome scrape skipped (not connected). Re-run with Chrome for pricing/careers data.
 
 ## Watchlist

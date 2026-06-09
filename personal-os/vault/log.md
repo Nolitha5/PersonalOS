@@ -17,6 +17,8 @@ Format: ## [YYYY-MM-DD HH:MM] command | description
 
 ## [2026-06-03 08:00] /morning-brief | brief generated. Urgent: 1 (Google security alert), FYI: 4, meetings: 0. New people: 0. New companies: 0. Daily Briefs DB recreated in Notion (d721dc09). Brief saved locally and to Notion.
 
+## [2026-06-09 13:47] /market-pulse | scanned 3 companies. Action: 7, FYI: 6. GPT-5 launched, OpenAI IPO filed, Notion MCP expanded, LangChain 1.1. Chrome scrape skipped. Updated: all 3 competitor pages, trends.md, status.md, news-archive/2026-06-09.md.
+
 ## [2026-06-08 12:24] /market-pulse | scanned 3 companies. Action: 8, FYI: 6. New companies: LangChain, Notion. New people: harrison-chase, ivan-zhao. Chrome scrape skipped (not connected). Updated: competitors/langchain.md, competitors/notion.md, competitors/openai.md, market/trends.md, news-archive/2026-06-08.md.
 
 ## [2026-06-03 07:00] /market-pulse | automation built. work/03-market-pulse/ + watchlist.md created, .claude/commands/market-pulse.md created. First scan: OpenAI. Action: 3, FYI: 3 (Chrome scrape skipped — not connected). Market Scans Notion DB created. Market Pulse marked Done on sprint board. Scheduled: daily 7:00 AM. New vault pages: business/competitors/openai.md, business/market/trends.md, people/sam-altman.md, people/sarah-friar.md, people/brad-lightcap.md, people/kate-rouch.md, projects/market-pulse/status.md, news-archive/2026-06-03.md.

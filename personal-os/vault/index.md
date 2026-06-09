@@ -58,6 +58,7 @@ relevant pages, then drills into them.
 - [[projects/market-pulse/status]] — Market Scans DB IDs, last run, watchlist
 - [[projects/market-pulse/news-archive/2026-06-03]] — First scan. OpenAI: 3 action items, 3 FYI
 - [[projects/market-pulse/news-archive/2026-06-08]] — OpenAI + LangChain + Notion. 8 action items, 6 FYI
+- [[projects/market-pulse/news-archive/2026-06-09]] — GPT-5 launch, OpenAI IPO filing, Notion MCP expanded. 7 action items, 6 FYI
 
 ## Research
 <!-- Research outputs -->
