@@ -490,7 +490,7 @@ function MorningBriefPage({ onBack }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/morning-brief/latest")
+    fetch("/api/morning-brief/latest")
       .then(r => r.json())
       .then(d => { setData(d); setLoading(false); })
       .catch(e => { setError(e.message); setLoading(false); });
@@ -693,7 +693,7 @@ export default function App() {
   const [liveBrief, setLiveBrief] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/morning-brief/latest")
+    fetch("/api/morning-brief/latest")
       .then(r => r.json())
       .then(d => setLiveBrief(d))
       .catch(() => {});

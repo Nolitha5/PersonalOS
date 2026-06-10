@@ -1,0 +1,9 @@
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+personal-os/node_modules/
+frontend/dist/
+.env
+.env.local
+.vercel/
+__MACOSX/
