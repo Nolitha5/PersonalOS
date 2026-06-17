@@ -723,7 +723,7 @@ export default function App() {
           <div className="sidebar-logo-icon">⚡</div>
           <div>
             <div className="sidebar-logo-text">Personal OS</div>
-            <div className="sidebar-logo-sub">Nduvho · v1.0</div>
+            <div className="sidebar-logo-sub">FiLo · v1.0</div>
           </div>
         </div>
 
